@@ -15,7 +15,6 @@ def capture(args):
 
     objp = np.zeros((args.x*args.y, 3), np.float32)
     objp[:,:2] = np.mgrid[0:args.x,0:args.y].T.reshape(-1,2)
-    objp *= args.lenght
 
     sdata = data.Data()
 

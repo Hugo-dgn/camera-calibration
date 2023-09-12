@@ -13,6 +13,13 @@ def draw(img, corners, imgpts):
     img = cv2.line(img, corner, tuple(imgpts[2].ravel()), (0,0,255), 5)
     return img
 
+def undistort(img, mtx, dist):
+    h,  w = img.shape[:2]
+    newcameramtx, roi=cv2.getOptimalNewCameraMatrix(mtx,dist,(w,h),1,(w,h))
+    dst = cv2.undistort(img, mtx, dist, None, newcameramtx)
+    return dst
+
+
 def draw_coordinate(args):
     with open('solution.yml') as f:
         param = yaml.load(f, Loader=yaml.FullLoader)[0]
@@ -24,12 +31,14 @@ def draw_coordinate(args):
 
     objp = np.zeros((args.x*args.y, 3), np.float32)
     objp[:,:2] = np.mgrid[0:args.x,0:args.y].T.reshape(-1,2)
-    objp *= args.lenght
 
     axis = np.float32([[3,0,0], [0,3,0], [0,0,-3]]).reshape(-1,3)
 
     while True:
         ret, frame = cap.read()
+        
+        frame = undistort(frame, mtx, dist)
+        
         corners, shape = get_corners(frame, (args.x, args.y))
 
         if corners is not None:
