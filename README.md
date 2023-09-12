@@ -31,3 +31,20 @@ python main.py process
 ```
 
 The results will be saved in a file named `solution.yml`.
+
+
+## Running a Simple Demo
+
+To visualize the camera calibration results, a simple demo is available. This demo will draw the X, Y, and Z axes on the calibration board. Execute the following command:
+
+```bash
+python main.py demo
+```
+
+## Deleting Data
+
+If you need to delete the previously captured calibration data, whether due to its quality or to calibrate another camera, use the following command:
+
+```bash
+python main.py supp
+```
