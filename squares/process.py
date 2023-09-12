@@ -11,4 +11,5 @@ def get_corners(img, size):
     if ret == True:
 
         corners2 = cv2.cornerSubPix(gray,corners, size,(-1,-1),criteria)
-        return corners2
+        return corners2, gray.shape
+    return None, None

@@ -3,6 +3,9 @@ import os
 import time
 import numpy as np
 
+from inputimeout import inputimeout
+
+import data
 from squares.process import get_corners
 
 def capture(args):
@@ -10,15 +13,18 @@ def capture(args):
 
     t = time.time()
 
-    objp = np.zeros((args.x*7,args.y), np.float32)
-    objp[:,:2] = np.mgrid[0:7,0:6].T.reshape(-1,2)
+    objp = np.zeros((args.x*args.y, 3), np.float32)
+    objp[:,:2] = np.mgrid[0:args.x,0:args.y].T.reshape(-1,2)
+    objp *= args.lenght
+
+    sdata = data.Data()
 
     while True:
         ret, frame = cap.read()
         if time.time() - t > args.dt:
             print("attempting to find chessboard")
             t = time.time()
-            corners = get_corners(frame, (args.x, args.y))
+            corners, shape = get_corners(frame, (args.x, args.y))
         else:
             corners = None
         if corners is not None:
@@ -29,10 +35,15 @@ def capture(args):
             break
             
         if corners is not None:
-            if input("save? (y/n)") == "y":
-                if not os.path.exists("data"):
-                    os.makedirs("data")
-                cv2.imwrite("data/chessboard.png", frame)
+            try:
+                if inputimeout(prompt='save ? (y/n):', timeout=args.dt) == "y":
+                    sdata.add(objp, corners, shape)
+                    print("saved")
+            # Catch the timeout error
+            except Exception:
+                sdata.add(objp, corners, shape)
+                print("saved")
+            
             t = time.time()
 
     cap.release()
