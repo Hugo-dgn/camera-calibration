@@ -30,8 +30,8 @@ def main():
     capture_parser = subparsers.add_parser("capture")
     capture_parser.add_argument("--dt", help="time after which a successful attempt is saved and time between two attempts.", type=float, default=1)
     capture_parser.add_argument("--camera", help="camera id", type=int, default=0)
-    capture_parser.add_argument("--x", help="Number of corner (x direction)", type=int, default=7)
-    capture_parser.add_argument("--y", help="Number of corner (y direction)", type=int, default=7)
+    capture_parser.add_argument("-x", help="Number of corner (x direction)", type=int, default=7)
+    capture_parser.add_argument("-y", help="Number of corner (y direction)", type=int, default=7)
     capture_parser.set_defaults(func=capture)
 
     supp_parser = subparsers.add_parser("supp")
