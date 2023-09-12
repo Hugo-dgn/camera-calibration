@@ -1,0 +1,1 @@
+from squares.capture import capture
